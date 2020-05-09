@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded",
    fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json')
       .then(response =>{return response.json()})
       .then(data => {
+         var color = d3.scaleOrdinal(d3.schemeSet1);
          const dataset = data;
          const w = 1000;
          const h = 500;
@@ -50,7 +51,7 @@ document.addEventListener("DOMContentLoaded",
             .attr("data-yvalue",(d,i)=>yValues[i])
             .attr("data-xvalue",(d)=>d)
             .attr("class","dot")
-            .style("fill",(d, i)=>{ return dataset[i].Doping===""? "#FE9677":"#984063"})
+            .style("fill",(d, i)=>{ return color(dataset[i].Doping!="")})
             .on('mouseover', function(d, i) {
                overlay.transition()
                  .duration(0)
@@ -89,9 +90,7 @@ document.addEventListener("DOMContentLoaded",
             .attr("id","y-axis")
             .attr("class","tick")
             .call(yAxis);
-
-         var color = d3.scaleOrdinal(d3.schemeCategory10);
-
+         
          var legendContainer = svg.append("g")
          .attr("id", "legend");
       
@@ -104,13 +103,13 @@ document.addEventListener("DOMContentLoaded",
          });
       
          legend.append("rect")
-         .attr("x", w - 18)
+         .attr("x", w - padding)
          .attr("width", 18)
          .attr("height", 18)
          .style("fill", color);
       
          legend.append("text")
-         .attr("x", w - 24)
+         .attr("x", w - padding)
          .attr("y", 9)
          .attr("dy", ".35em")
          .style("text-anchor", "end")
